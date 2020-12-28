@@ -2,7 +2,9 @@ package encode
 
 import (
 	"encoding/binary"
+	"github.com/ingotmc/ingot/mc"
 	"io"
+	"math"
 )
 
 func VarInt(value int32, w io.Writer) error {
@@ -51,4 +53,25 @@ func Bool(b bool, w io.Writer) error {
 	}
 	_, err := w.Write([]byte{v})
 	return err
+}
+
+func Double(f float64, w io.Writer) error {
+	return binary.Write(w, binary.BigEndian, &f)
+}
+
+func Float(f float32, w io.Writer) error {
+	return binary.Write(w, binary.BigEndian, &f)
+}
+
+func UByte(b uint8, w io.Writer) error {
+	_, err := w.Write([]byte{b})
+	return err
+}
+
+func Position(pos mc.Position, w io.Writer) error {
+	x := int64(math.Floor(pos.X))
+	y := int64(math.Floor(pos.Y))
+	z := int64(math.Floor(pos.Z))
+	v := ((x & 0x3ffffff) << 38) | ((z & 0x3ffffff) << 12) | (y & 0xfff)
+	return Long(v, w)
 }

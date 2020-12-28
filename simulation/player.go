@@ -19,12 +19,13 @@ const maxPlayers = 5
 
 type playerService struct {
 	numConnectedPlayers int
-	players map[string]*Player
+	players             map[string]*Player
 }
 
 func (p *playerService) RemovePlayer(username string) error {
 	if _, ok := p.players[username]; ok {
 		delete(p.players, username)
+		p.numConnectedPlayers--
 		return nil
 	}
 	// TODO: better error type
@@ -54,6 +55,3 @@ func (p *playerService) NewPlayer(username string, uuid []byte) (*Player, error)
 	p.numConnectedPlayers++
 	return player, nil
 }
-
-
-

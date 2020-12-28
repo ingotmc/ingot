@@ -16,7 +16,7 @@ type clientTransport struct {
 	quit    chan struct{}
 }
 
-func (c *clientTransport) Start() {
+func (c *clientTransport) Run() {
 	packets := c.receive()
 loop:
 	for {
@@ -50,7 +50,7 @@ func (c *clientTransport) receive() chan packet {
 			}
 			packet := pf(id)
 			if packet == nil {
-				log.Println("couldn't find decoding for packetID", id)
+				log.Printf("couldn't find decoding for packet id %#x\n", id)
 				continue // TODO: handle
 			}
 			err = packet.Parse(data)

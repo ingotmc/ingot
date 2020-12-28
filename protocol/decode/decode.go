@@ -58,3 +58,8 @@ func Bool(r io.Reader) (res bool, err error) {
 	}
 	return
 }
+
+func Long(r io.Reader) (res int64, err error) {
+	err = binary.Read(r, binary.BigEndian, &res)
+	return
+}

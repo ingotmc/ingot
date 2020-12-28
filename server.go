@@ -13,8 +13,8 @@ import (
 const port = 25156
 
 type Server struct {
-	l net.Listener
-	quit chan struct{}
+	l       net.Listener
+	quit    chan struct{}
 	clients map[*Client]struct{}
 }
 
@@ -24,9 +24,9 @@ func NewServer() (*Server, error) {
 		return nil, err
 	}
 	return &Server{
-		l:                    l,
+		l:       l,
 		clients: make(map[*Client]struct{}),
-		quit: make(chan struct{}),
+		quit:    make(chan struct{}),
 	}, nil
 }
 
@@ -51,9 +51,9 @@ func (s *Server) acceptConnections() chan net.Conn {
 func (s *Server) newConn(conn net.Conn) {
 	c := &Client{
 		clientTransport{
-			conn:  conn,
-			state: protocol.Handshaking,
-			quit:  make(chan struct{}),
+			conn:    conn,
+			state:   protocol.Handshaking,
+			quit:    make(chan struct{}),
 			packets: make(chan packet),
 		},
 		simulation.Default,
@@ -62,7 +62,7 @@ func (s *Server) newConn(conn net.Conn) {
 	}
 	s.clients[c] = struct{}{}
 	go func() {
-		c.Start()
+		c.Run()
 		delete(s.clients, c)
 	}()
 }

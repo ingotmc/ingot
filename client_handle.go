@@ -1,16 +1,16 @@
 package ingot
 
 import (
-	"crypto/sha256"
-	"encoding/binary"
 	"errors"
 	"fmt"
+	"github.com/ingotmc/ingot/mc"
 	"github.com/ingotmc/ingot/protocol"
 	"github.com/ingotmc/ingot/protocol/handshaking"
 	"github.com/ingotmc/ingot/protocol/login"
 	"github.com/ingotmc/ingot/protocol/play"
 	"log"
 	"reflect"
+	"time"
 )
 
 func (c *Client) handlePacket(p packet) {
@@ -21,6 +21,10 @@ func (c *Client) handlePacket(p packet) {
 		c.handleLoginStart(pkt)
 	case *play.ClientSettings:
 		c.handleClientSettings(pkt)
+	case *play.TeleportConfirm:
+		fmt.Println("received confirm for tp", pkt.TeleportID)
+	case *play.KeepAlive:
+		fmt.Println("received keepalive for time", time.Unix(pkt.ID, 0))
 	default:
 		fmt.Printf("unhandled packet: %v\n", reflect.TypeOf(pkt))
 	}
@@ -71,11 +75,34 @@ func (c Client) sendJoinGame() error {
 	return c.sendPacket(jg)
 }
 
-func hashSeed(seed string) (int64, error) {
-	sum := sha256.New().Sum([]byte(seed))
-	if len(sum) < 8 {
-		// TODO: handle err
-		return 0x00, errors.New("seed hash too short")
+func (c *Client) handleClientSettings(pkt *play.ClientSettings) {
+	c.viewDistance = pkt.ViewDistance
+	fmt.Println("new view distance", c.viewDistance)
+	// TODO: player setup sequence (inv, world, ...)
+	sp := &play.SpawnPosition{
+		Position: mc.Position{
+			X: 0,
+			Y: 0,
+			Z: 0,
+		},
 	}
-	return int64(binary.BigEndian.Uint64(sum)), nil
+	err := c.sendPacket(sp)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	c.player.SetPosition(mc.Position{100, 64, -255})
+	ppl := &play.PlayerPositionAndLook{
+		Position:   c.player.Position(),
+		Rotation:   c.player.Rotation(),
+		Relative:   0,
+		TeleportID: 0x1611,
+	}
+	c.sendPacket(ppl)
+	go func() {
+		for c.player != nil {
+			<-time.After(3 * time.Second)
+			c.sendPacket(&play.KeepAlive{ID: time.Now().Unix()})
+		}
+	}()
 }

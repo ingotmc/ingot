@@ -18,7 +18,7 @@ type vector3 struct {
 type Position Coords
 type Velocity vector3
 type Rotation struct {
-	Yaw, Angle float64
+	Yaw, Pitch float32
 }
 type Health int
 
