@@ -23,7 +23,7 @@ type Player struct {
 	Gamemode  Gamemode
 	Dimension Dimension
 	eid       EID
-	pos       Position
+	pos       Coords
 	rot       Rotation
 	vel       Velocity
 	health    Health
@@ -42,11 +42,11 @@ func (p Player) EID() EID {
 	return p.eid
 }
 
-func (p Player) Position() Position {
+func (p Player) Position() Coords {
 	return p.pos
 }
 
-func (p Player) SetPosition(position Position) {
+func (p *Player) SetPosition(position Coords) {
 	p.pos = position
 }
 
@@ -54,7 +54,7 @@ func (p Player) Rotation() Rotation {
 	return p.rot
 }
 
-func (p Player) SetRotation(rotation Rotation) {
+func (p *Player) SetRotation(rotation Rotation) {
 	p.rot = rotation
 }
 
@@ -62,7 +62,7 @@ func (p Player) Velocity() Velocity {
 	return p.vel
 }
 
-func (p Player) SetVelocity(velocity Velocity) {
+func (p *Player) SetVelocity(velocity Velocity) {
 	p.vel = velocity
 }
 
@@ -70,7 +70,7 @@ func (p Player) Health() Health {
 	return p.health
 }
 
-func (p Player) SetHealth(health Health) {
+func (p *Player) SetHealth(health Health) {
 	p.health = health
 }
 

@@ -13,7 +13,7 @@ func PacketFactory(id int32) decode.Parser {
 	return nil
 }
 
-func IDFactory(m encode.Marshaler) int32 {
+func IDFactory(m encode.Encoder) int32 {
 	switch m.(type) {
 	case *LoginSuccess:
 		return 0x02

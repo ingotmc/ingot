@@ -7,4 +7,4 @@ import (
 
 type PacketFactory func(int32) decode.Parser
 
-type IDFactory func(encode.Marshaler) int32
+type IDFactory func(encode.Encoder) int32

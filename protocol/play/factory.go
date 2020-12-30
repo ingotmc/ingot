@@ -5,8 +5,8 @@ import (
 	"github.com/ingotmc/ingot/protocol/encode"
 )
 
-func IDFactory(marshaler encode.Marshaler) int32 {
-	switch marshaler.(type) {
+func IDFactory(e encode.Encoder) int32 {
+	switch e.(type) {
 	case *JoinGame:
 		return 0x26
 	case *PlayerPositionAndLook:
@@ -15,6 +15,10 @@ func IDFactory(marshaler encode.Marshaler) int32 {
 		return 0x4e
 	case *KeepAlive:
 		return 0x21
+	case *ChunkData:
+		return 0x22
+	case *UpdateViewPosition:
+		return 0x41
 	}
 	return 0
 }
@@ -29,6 +33,8 @@ func PacketFactory(id int32) decode.Parser {
 		return new(ClientSettings)
 	case 0x0f:
 		return new(KeepAlive)
+	case 0x11:
+		return new(PlayerPosition)
 	}
 	return nil
 }

@@ -50,7 +50,7 @@ func (c *clientTransport) receive() chan packet {
 			}
 			packet := pf(id)
 			if packet == nil {
-				log.Printf("couldn't find decoding for packet id %#x\n", id)
+				//log.Printf("couldn't find decoding for packet id %#x\n", id)
 				continue // TODO: handle
 			}
 			err = packet.Parse(data)
@@ -66,7 +66,7 @@ func (c *clientTransport) receive() chan packet {
 	return out
 }
 
-func (c *clientTransport) sendPacket(clientbound encode.Marshaler) error {
+func (c *clientTransport) sendPacket(clientbound encode.Encoder) error {
 	idf := c.state.IDFactory()
 	if idf == nil {
 		return errors.New("no idf")

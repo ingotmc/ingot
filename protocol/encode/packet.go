@@ -5,21 +5,20 @@ import (
 	"io"
 )
 
-type Marshaler interface {
-	Marshal() ([]byte, error)
+type Encoder interface {
+	EncodeMC(w io.Writer) error
 }
 
-func Packet(w io.Writer, id int32, m Marshaler) (err error) {
+func Packet(w io.Writer, id int32, m Encoder) (err error) {
 	buf := bytes.NewBuffer([]byte{})
 	err = VarInt(id, buf)
 	if err != nil {
 		return
 	}
-	data, err := m.Marshal()
+	err = m.EncodeMC(buf)
 	if err != nil {
 		return
 	}
-	buf.Write(data)
 	err = VarInt(int32(buf.Len()), w)
 	if err != nil {
 		return

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/ingotmc/ingot/protocol/decode"
 	"github.com/ingotmc/ingot/protocol/encode"
+	"io"
 )
 
 type KeepAlive struct {
@@ -16,9 +17,6 @@ func (k *KeepAlive) Parse(data []byte) (err error) {
 	return
 }
 
-func (k *KeepAlive) Marshal() (data []byte, err error) {
-	w := bytes.NewBuffer(data)
-	err = encode.Long(k.ID, w)
-	data = w.Bytes()
-	return
+func (k *KeepAlive) EncodeMC(w io.Writer) (err error) {
+	return encode.Long(k.ID, w)
 }

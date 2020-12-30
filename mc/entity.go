@@ -15,7 +15,6 @@ type vector3 struct {
 	X, Y, Z float64
 }
 
-type Position Coords
 type Velocity vector3
 type Rotation struct {
 	Yaw, Pitch float32
@@ -26,8 +25,8 @@ type EID int32
 
 type Entity interface {
 	EID() EID
-	Position() Position
-	SetPosition(Position)
+	Position() Coords
+	SetPosition(Coords)
 	Rotation() Rotation
 	SetRotation(Rotation)
 	Velocity() Velocity

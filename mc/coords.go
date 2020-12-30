@@ -4,6 +4,10 @@ import "math"
 
 type Coords vector3
 
+type ChunkCoords struct {
+	X, Y, Z int32
+}
+
 func (c Coords) block() Coords {
 	return Coords{
 		X: math.Floor(c.X),
@@ -12,11 +16,11 @@ func (c Coords) block() Coords {
 	}
 }
 
-func (c Coords) ChunkCoords() Coords {
+func (c Coords) ChunkCoords() ChunkCoords {
 	c = c.block()
-	res := Coords{}
-	res.X = float64(int64(c.X) >> 4)
-	res.Y = float64(int64(c.Y) >> 4)
-	res.Z = float64(int64(c.Z) >> 4)
+	res := ChunkCoords{}
+	res.X = int32(c.X) >> 4
+	res.Y = int32(c.Y) >> 4
+	res.Z = int32(c.Z) >> 4
 	return res
 }

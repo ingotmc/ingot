@@ -1,18 +1,15 @@
 package play
 
 import (
-	"bytes"
 	"github.com/ingotmc/ingot/mc"
 	"github.com/ingotmc/ingot/protocol/encode"
+	"io"
 )
 
 type SpawnPosition struct {
-	Position mc.Position
+	Position mc.Coords
 }
 
-func (s *SpawnPosition) Marshal() (data []byte, err error) {
-	buf := bytes.NewBuffer(data)
-	err = encode.Position(s.Position, buf)
-	data = buf.Bytes()
-	return
+func (s *SpawnPosition) EncodeMC(w io.Writer) (err error) {
+	return encode.Coords(s.Position, w)
 }

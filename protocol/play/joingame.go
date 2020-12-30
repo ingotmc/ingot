@@ -1,35 +1,32 @@
 package play
 
 import (
-	"bytes"
 	"github.com/ingotmc/ingot/mc"
 	"github.com/ingotmc/ingot/protocol/encode"
+	"io"
 )
 
 type JoinGame struct {
-	EID mc.EID
-	Dimension mc.Dimension
-	Gamemode mc.Gamemode
-	HashedSeed int64
-	MaxPlayers uint8
-	LevelType mc.LevelType
-	ViewDistance int32
+	EID              mc.EID
+	Dimension        mc.Dimension
+	Gamemode         mc.Gamemode
+	HashedSeed       int64
+	MaxPlayers       uint8
+	LevelType        mc.LevelType
+	ViewDistance     int32
 	ReducedDebugInfo bool
-	RespawnScreen bool
+	RespawnScreen    bool
 }
 
-func (j *JoinGame) Marshal() (data []byte, err error) {
-	w := bytes.NewBuffer(data)
+func (j *JoinGame) EncodeMC(w io.Writer) (err error) {
 	encode.Int(int32(j.EID), w)
-	w.WriteByte(byte(j.Gamemode))
+	encode.UByte(byte(j.Gamemode), w)
 	encode.Int(int32(j.Dimension), w)
 	encode.Long(j.HashedSeed, w)
-	w.WriteByte(j.MaxPlayers)
+	encode.UByte(j.MaxPlayers, w)
 	encode.String(string(j.LevelType), w)
 	encode.VarInt(j.ViewDistance, w)
 	encode.Bool(j.ReducedDebugInfo, w)
 	encode.Bool(j.RespawnScreen, w)
-	data = w.Bytes()
 	return
 }
-

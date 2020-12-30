@@ -59,6 +59,10 @@ func Double(f float64, w io.Writer) error {
 	return binary.Write(w, binary.BigEndian, &f)
 }
 
+func Short(f int16, w io.Writer) error {
+	return binary.Write(w, binary.BigEndian, &f)
+}
+
 func Float(f float32, w io.Writer) error {
 	return binary.Write(w, binary.BigEndian, &f)
 }
@@ -68,7 +72,7 @@ func UByte(b uint8, w io.Writer) error {
 	return err
 }
 
-func Position(pos mc.Position, w io.Writer) error {
+func Coords(pos mc.Coords, w io.Writer) error {
 	x := int64(math.Floor(pos.X))
 	y := int64(math.Floor(pos.Y))
 	z := int64(math.Floor(pos.Z))
