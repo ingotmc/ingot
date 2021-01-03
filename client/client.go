@@ -1,4 +1,4 @@
-package ingot
+package client
 
 import (
 	"crypto/sha256"

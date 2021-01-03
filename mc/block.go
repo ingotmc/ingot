@@ -1,15 +1,22 @@
+// package mc is a collection of types and methods needed to describe the minecraft world.
 package mc
 
 import "encoding/json"
 
-type BlockState struct {
+// Block represents a single block in a chunk.
+type Block struct {
 	ID         int32
-	Properties BlockStateProperties
+	Properties BlockProperties
 }
 
-type BlockStateProperties map[string]string
+type BlockStates struct {
+	States       []Block
+	DefaultState *Block
+}
 
-func (b BlockStateProperties) Equal(other BlockStateProperties) (res bool) {
+type BlockProperties map[string]string
+
+func (b BlockProperties) Equal(other BlockProperties) (res bool) {
 	for prop, value := range b {
 		otherValue, ok := other[prop]
 		if !ok {
@@ -22,26 +29,21 @@ func (b BlockStateProperties) Equal(other BlockStateProperties) (res bool) {
 	return true
 }
 
-type Block struct {
-	States       []BlockState
-	DefaultState *BlockState
-}
-
-func (b *Block) UnmarshalJSON(data []byte) error {
+func (b *BlockStates) UnmarshalJSON(data []byte) error {
 	blockJson := struct {
 		States []struct {
-			Properties BlockStateProperties `json:"properties"`
-			ID         int32                `json:"id"`
-			Default    bool                 `json:"default"`
+			Properties BlockProperties `json:"properties"`
+			ID         int32           `json:"id"`
+			Default    bool            `json:"default"`
 		} `json:"states"`
 	}{}
 	err := json.Unmarshal(data, &blockJson)
 	if err != nil {
 		return err
 	}
-	b.States = make([]BlockState, len(blockJson.States))
+	b.States = make([]Block, len(blockJson.States))
 	for i, s := range blockJson.States {
-		b.States[i] = BlockState{
+		b.States[i] = Block{
 			ID:         s.ID,
 			Properties: s.Properties,
 		}

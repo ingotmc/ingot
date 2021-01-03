@@ -3,6 +3,7 @@ package ingot
 import (
 	"errors"
 	"fmt"
+	"github.com/ingotmc/ingot/client"
 	"github.com/ingotmc/ingot/protocol"
 	"github.com/ingotmc/ingot/simulation"
 	"io"
@@ -15,7 +16,7 @@ const port = 25156
 type Server struct {
 	l       net.Listener
 	quit    chan struct{}
-	clients map[*Client]struct{}
+	clients map[*client.Client]struct{}
 }
 
 func NewServer() (*Server, error) {
@@ -25,7 +26,7 @@ func NewServer() (*Server, error) {
 	}
 	return &Server{
 		l:       l,
-		clients: make(map[*Client]struct{}),
+		clients: make(map[*client.Client]struct{}),
 		quit:    make(chan struct{}),
 	}, nil
 }
@@ -49,12 +50,12 @@ func (s *Server) acceptConnections() chan net.Conn {
 }
 
 func (s *Server) newConn(conn net.Conn) {
-	c := &Client{
-		clientTransport{
+	c := &client.Client{
+		client.clientTransport{
 			conn:    conn,
 			state:   protocol.Handshaking,
 			quit:    make(chan struct{}),
-			packets: make(chan packet),
+			packets: make(chan client.packet),
 		},
 		simulation.Default,
 		nil,

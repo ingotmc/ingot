@@ -2,25 +2,33 @@ package mc
 
 import "math"
 
+// Coords are a triplet of (x,y,z) float values.
 type Coords vector3
 
-type ChunkCoords struct {
-	X, Y, Z int32
-}
-
-func (c Coords) block() Coords {
-	return Coords{
-		X: math.Floor(c.X),
-		Y: math.Floor(c.Y),
-		Z: math.Floor(c.Z),
+// BlockCoords returns the floor of the (x,y,z) Coords values as int.
+func (c Coords) BlockCoords() BlockCoords {
+	return BlockCoords{
+		X: int(math.Floor(c.X)),
+		Y: int(math.Floor(c.Y)),
+		Z: int(math.Floor(c.Z)),
 	}
 }
 
 func (c Coords) ChunkCoords() ChunkCoords {
-	c = c.block()
-	res := ChunkCoords{}
-	res.X = int32(c.X) >> 4
-	res.Y = int32(c.Y) >> 4
-	res.Z = int32(c.Z) >> 4
-	return res
+	return c.BlockCoords().ChunkCoords()
+}
+
+type BlockCoords struct {
+	X, Y, Z int
+}
+
+func (b BlockCoords) ChunkCoords() ChunkCoords {
+	return ChunkCoords{
+		X: int32(b.X >> 4),
+		Z: int32(b.Z >> 16),
+	}
+}
+
+type ChunkCoords struct {
+	X, Z int32
 }

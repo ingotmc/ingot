@@ -1,10 +1,11 @@
 package simulation
 
-type Chunk struct {
-	EntityService
+import "github.com/ingotmc/ingot/mc"
+
+type WorldStore interface {
+	Dimension(dim mc.Dimension) ChunkStore
 }
 
-type EntityService interface {
-
+type ChunkStore interface {
+	ChunkAt(coords mc.ChunkCoords) (mc.Chunk, error)
 }
-

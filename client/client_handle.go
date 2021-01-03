@@ -1,4 +1,4 @@
-package ingot
+package client
 
 import (
 	"errors"
@@ -24,8 +24,10 @@ func (c *Client) handlePacket(p packet) {
 	case *play.ClientSettings:
 		c.handleClientSettings(pkt)
 	case *play.TeleportConfirm:
+		break
 		//fmt.Println("received confirm for tp", pkt.TeleportID)
 	case *play.KeepAlive:
+		break
 		//fmt.Println("received keepalive for time", time.Unix(pkt.ID, 0))
 	case *play.PlayerPosition:
 		c.handlePlayerPosition(pkt)
@@ -128,7 +130,7 @@ func (c *Client) deltaChunks(oldPos, newPos mc.ChunkCoords) (deltaPos []mc.Chunk
 }
 
 func (c *Client) sendChunks(chunks []mc.ChunkCoords) {
-	dim := anvil.Dimension("./.gamesave/saves/Ingot Superflat/region")
+	dim := anvil.Dimension("./.gamesave/saves/Ingot/region")
 	for _, pos := range chunks {
 		chunk, err := dim.ChunkAt(int(pos.X), int(pos.Z))
 		if err != nil {
