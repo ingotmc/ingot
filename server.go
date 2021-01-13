@@ -4,8 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ingotmc/ingot/client"
-	"github.com/ingotmc/ingot/protocol"
-	"github.com/ingotmc/ingot/simulation"
+	"github.com/ingotmc/ingot/world"
 	"io"
 	"log"
 	"net"
@@ -16,10 +15,11 @@ const port = 25156
 type Server struct {
 	l       net.Listener
 	quit    chan struct{}
+	sim     world.World
 	clients map[*client.Client]struct{}
 }
 
-func NewServer() (*Server, error) {
+func NewServer(sim world.World) (*Server, error) {
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		return nil, err
@@ -28,6 +28,7 @@ func NewServer() (*Server, error) {
 		l:       l,
 		clients: make(map[*client.Client]struct{}),
 		quit:    make(chan struct{}),
+		sim:     sim,
 	}, nil
 }
 
@@ -50,17 +51,7 @@ func (s *Server) acceptConnections() chan net.Conn {
 }
 
 func (s *Server) newConn(conn net.Conn) {
-	c := &client.Client{
-		client.clientTransport{
-			conn:    conn,
-			state:   protocol.Handshaking,
-			quit:    make(chan struct{}),
-			packets: make(chan client.packet),
-		},
-		simulation.Default,
-		nil,
-		2,
-	}
+	c := client.New(conn, s.sim)
 	s.clients[c] = struct{}{}
 	go func() {
 		c.Run()
