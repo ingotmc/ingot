@@ -6,11 +6,11 @@ import (
 )
 
 type ErrChunkNotFound struct {
-	coords mc.ChunkCoords
+	Coords mc.ChunkCoords
 }
 
 func (e ErrChunkNotFound) Error() string {
-	return fmt.Sprintf("chunk (%d,%d) couldn't be found in chunkstore")
+	return fmt.Sprintf("chunk (%d,%d) couldn't be found in chunkstore", e.Coords.X, e.Coords.Z)
 }
 
 type ChunkStore interface {

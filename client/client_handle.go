@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func (c *Client) handlePacket(p packet) {
+func (c *Client) handlePacket(p interface{}) {
 	switch pkt := p.(type) {
 	case handshaking.SetProtocol:
 		fmt.Println("got set Protocol!")
@@ -36,21 +36,19 @@ func (c *Client) handlePacket(p packet) {
 func (c *Client) handlePlayerPosition(pkt play.PlayerPosition) {
 	newPos := mc.Coords{pkt.X, pkt.FeetY, pkt.Z}
 	oldPos := c.player.Position()
-	oldChunkPos := oldPos.ChunkCoords()
-	newChunkPos := newPos.ChunkCoords()
-	sendChunks := oldChunkPos.X != newChunkPos.X || oldChunkPos.Z != newChunkPos.Z
+	sendChunks := newPos.ChunkCoords() != oldPos.ChunkCoords()
+	sendUvp := newPos.Y-oldPos.Y > 0 || newPos.Y-oldPos.Y < 0
 	c.player.SetPosition(newPos)
-	if sendChunks {
+	if sendChunks || sendUvp {
 		uvp := &play.UpdateViewPosition{
-			ChunkX: newChunkPos.X,
-			ChunkZ: newChunkPos.Z,
+			ChunkX: newPos.ChunkCoords().X,
+			ChunkZ: newPos.ChunkCoords().Z,
 		}
 		c.SendPacket(uvp)
 	}
+	chunks := deltaChunks(oldPos.ChunkCoords(), newPos.ChunkCoords(), int(c.viewDistance))
 	if sendChunks {
-		dChunks := c.deltaChunks(oldChunkPos, newChunkPos)
-		fmt.Println("pos updated sending chunks", dChunks)
-		c.sendChunks(dChunks)
+		c.sendChunks(chunks)
 	}
 }
 
@@ -83,17 +81,25 @@ func (c *Client) handleLoginStart(pkt login.LoginStart) {
 func (c *Client) handleClientSettings(pkt play.ClientSettings) {
 	c.viewDistance = pkt.ViewDistance
 	fmt.Println("new view distance", c.viewDistance)
-	pos := mc.Coords{-9, 20, 8}
+	pos := mc.Coords{3, 90, -972}
 	c.player.SetPosition(pos)
-	c.sendChunks(pos.ChunkCoords().Radius(int(c.viewDistance / 2)))
-	// TODO: player setup sequence (inv, w, ...)
 	err := c.SendPacket(play.SpawnPosition{
+		// TODO: player setup sequence (inv, w, ...)
 		Position: pos,
 	})
 	if err != nil {
 		log.Println(err)
 		return
 	}
+	uvp := play.UpdateViewPosition{
+		ChunkX: pos.ChunkCoords().X,
+		ChunkZ: pos.ChunkCoords().Z,
+	}
+	c.SendPacket(uvp)
+	uvd := play.UpdateViewDistance{Distance: int32(c.viewDistance)}
+	c.SendPacket(uvd)
+	chunks := pos.ChunkCoords().Radius(int(c.viewDistance))
+	c.sendChunks(chunks)
 	c.SendPacket(play.PlayerPositionAndLook{
 		Position:   c.player.Position(),
 		Rotation:   c.player.Rotation(),

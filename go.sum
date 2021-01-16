@@ -1,10 +1,8 @@
 github.com/bearmini/bitstream-go v0.0.0-20190121230027-bec1c9ea0d3c h1:4RL7ENhXVDHqTk7vSgM7zUNHdYW7LfWUIBH2WZ/FZLc=
 github.com/bearmini/bitstream-go v0.0.0-20190121230027-bec1c9ea0d3c/go.mod h1:keOh1QpnRe0nCHGjev5R37jMl0zlLP+3ktETWfa4eik=
-github.com/ingotmc/mc v0.0.1 h1:M2FcSgDMaWZTOCPqV/4lm5XsDEyvTpaWez+ffzIpuio=
-github.com/ingotmc/mc v0.0.1/go.mod h1:iBxLCzcYBEn4+eyIKQzW+9Zp8k2Z5c2zZpF4aFAkHvA=
 github.com/ingotmc/nbt v0.0.1 h1:qP/vKrrWkw0Q9mXY1WUmIWSvaDDgCXebD1ybYspbYLY=
 github.com/ingotmc/nbt v0.0.1/go.mod h1:U+IINL7lKUZW3dM0jCGBOV0Oy6+ibI8ElBQ9VW9QH1M=
-github.com/ingotmc/protocol v0.0.1 h1:yW+I6TL2szqTQG5u+ia89IwkahhFF0UhSHI/TXfTsoo=
-github.com/ingotmc/protocol v0.0.1/go.mod h1:FeHWkGoDk2e8qeqiTchq861dr0WOm17is6jR9s6d9wU=
+github.com/ojrac/opensimplex-go v1.0.1 h1:XslvpLP6XqQSATUtsOnGBYtFPw7FQ6h6y0ihjVeOLHo=
+github.com/ojrac/opensimplex-go v1.0.1/go.mod h1:MoSgj04tZpH8U0RefZabnHV2AbLgv/2mo3hLJtWqSEs=
 github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=

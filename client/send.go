@@ -33,13 +33,17 @@ func (c *Client) sendJoinGame() error {
 }
 
 func (c *Client) sendChunkData(chunk mc.Chunk) error {
+	biomes := make([]int32, 1024)
+	for i := range biomes {
+		biomes[i] = 127
+	}
 	cd := play.ChunkData{
 		ChunkX:              chunk.Coords.X,
 		ChunkZ:              chunk.Coords.Z,
 		FullChunk:           true,
 		PrimaryBitMask:      encode.ChunkBitmask(chunk),
 		Heightmaps:          encode.Heightmap(chunk.Heightmap),
-		Biomes:              make([]int32, 1024),
+		Biomes:              biomes,
 		ChunkContent:        encode.Chunk(chunk),
 		NumberBlockEntities: 0,
 		BlockEntities:       nil,

@@ -4,10 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"github.com/ingotmc/ingot"
-	"github.com/ingotmc/ingot/anvil"
+	"github.com/ingotmc/ingot/cmd/ingot/chunk"
 	"github.com/ingotmc/ingot/cmd/ingot/player"
-	"github.com/ingotmc/mc"
 	"github.com/ingotmc/ingot/world"
+	"github.com/ingotmc/mc"
+	"github.com/ingotmc/worldgen/noise/octavenoise"
 	"log"
 	"os"
 	"path"
@@ -35,19 +36,17 @@ func main() {
 	mc.GlobalPalette.FromJson(paletteFile)
 	_ = paletteFile.Close()
 
-	overworld := anvil.Dimension(path.Join(*gameFolder, "/region"))
-	ws := world.NewWorldStore(overworld, nil, nil)
-	world := world.World{
-		Seed:       "ingot",
-		WorldStore: ws,
-	}
-
-	sim := world.Simulation{
+	w := world.World{
+		Seed:          "ingot",
 		PlayerService: player.NewService(5),
-		World:         world,
+		Overworld: world.Dimension{
+			ID:             mc.Overworld,
+			ChunkStore:     new(chunk.Store),
+			ChunkGenerator: chunk.NewSimplexGenerator(octavenoise.WithFrequency(1600.0), octavenoise.WithScalingFactor(0.3)),
+		},
 	}
 
-	srv, err := ingot.NewServer(sim)
+	srv, err := ingot.NewServer(w)
 	if err != nil {
 		log.Fatal(err)
 	}

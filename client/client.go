@@ -5,15 +5,14 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 	"errors"
+	"fmt"
+	"github.com/ingotmc/ingot/world"
 	"github.com/ingotmc/mc"
 	"github.com/ingotmc/protocol"
 	"github.com/ingotmc/protocol/handshaking"
-	"github.com/ingotmc/ingot/world"
 	"io"
 	"log"
 )
-
-type packet interface{}
 
 type Client struct {
 	rwc           io.ReadWriteCloser
@@ -28,7 +27,7 @@ type Client struct {
 }
 
 func New(conn io.ReadWriteCloser, w world.World) *Client {
-	return &Client{
+	c := &Client{
 		rwc:           conn,
 		readRawPacket: protocol.ReadWirePacket,
 		sendPacket:    protocol.SendPacket,
@@ -39,6 +38,20 @@ func New(conn io.ReadWriteCloser, w world.World) *Client {
 		dim:           world.Dimension{},
 		viewDistance:  2,
 	}
+	go func(c *Client) {
+		var err error
+		x, z := 0, 0
+		for err == nil {
+			_, err = fmt.Scanf("%d %d\n", &x, &z)
+			if c.state != protocol.Play {
+				return
+			}
+			c.sendChunks([]mc.ChunkCoords{
+				{int32(x), int32(z)},
+			})
+		}
+	}(c)
+	return c
 }
 
 func (c *Client) readPacket() (pkt interface{}, err error) {

@@ -17,7 +17,7 @@ func GetChunk(dim Dimension, coords mc.ChunkCoords) (mc.Chunk, error) {
 	if err == nil {
 		return chunk, nil
 	}
-	if !errors.Is(err, ErrChunkNotFound{coords: coords}) {
+	if !errors.Is(err, ErrChunkNotFound{Coords: coords}) {
 		return mc.Chunk{}, err
 	}
 	chunk = dim.Generate(coords)
