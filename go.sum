@@ -1,7 +1,13 @@
 github.com/bearmini/bitstream-go v0.0.0-20190121230027-bec1c9ea0d3c h1:4RL7ENhXVDHqTk7vSgM7zUNHdYW7LfWUIBH2WZ/FZLc=
 github.com/bearmini/bitstream-go v0.0.0-20190121230027-bec1c9ea0d3c/go.mod h1:keOh1QpnRe0nCHGjev5R37jMl0zlLP+3ktETWfa4eik=
+github.com/ingotmc/mc v0.0.2-prerefactor.1 h1:Ww/achbpZG0eI176HEAOSWRcWL2gS+9PQZfVph4hhiU=
+github.com/ingotmc/mc v0.0.2-prerefactor.1/go.mod h1:iBxLCzcYBEn4+eyIKQzW+9Zp8k2Z5c2zZpF4aFAkHvA=
 github.com/ingotmc/nbt v0.0.1 h1:qP/vKrrWkw0Q9mXY1WUmIWSvaDDgCXebD1ybYspbYLY=
 github.com/ingotmc/nbt v0.0.1/go.mod h1:U+IINL7lKUZW3dM0jCGBOV0Oy6+ibI8ElBQ9VW9QH1M=
+github.com/ingotmc/protocol v0.0.2-prerefactor.1 h1:W8jS8iia1eERsUq3g14jwrlHAE7BtcWEoY1VD3eAgVk=
+github.com/ingotmc/protocol v0.0.2-prerefactor.1/go.mod h1:nFk2IuNQqeb4QkoZ6i0lyOX+B6F+lM+nz+SC13oEkC4=
+github.com/ingotmc/worldgen v0.0.1 h1:8sEDd7GlA8A7yI5Upd+Jp4pc/i6SMK2HbZBXoO7L0Wc=
+github.com/ingotmc/worldgen v0.0.1/go.mod h1:3yRmU33SVJSoKjDYre2zmXMaghcN7yLKzm8cNjk168k=
 github.com/ojrac/opensimplex-go v1.0.1 h1:XslvpLP6XqQSATUtsOnGBYtFPw7FQ6h6y0ihjVeOLHo=
 github.com/ojrac/opensimplex-go v1.0.1/go.mod h1:MoSgj04tZpH8U0RefZabnHV2AbLgv/2mo3hLJtWqSEs=
 github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=

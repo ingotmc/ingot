@@ -12,6 +12,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 )
 
 const defaultGameFolder = ".local/share/ingot/" // join with homedir
@@ -29,7 +30,7 @@ func main() {
 		log.Fatal(fmt.Errorf("couldn't stat game_folder: %w", err))
 	}
 
-	paletteFile, err := os.Open(path.Join(*gameFolder, "/data/blocks.json"))
+	paletteFile, err := os.Open(filepath.Join(*gameFolder, "data", "blocks.json"))
 	if err != nil {
 		log.Fatal(fmt.Errorf("coudln't load palette file: %w", err))
 	}
